@@ -1,0 +1,19 @@
+# Copyright 2026 Owl Browser Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//owl_build/owl_features.gni")
+
+source_set("adblocker") {
+  sources = [
+    "owl_filter_list_manager.cc",
+    "owl_filter_list_manager.h",
+    "owl_request_filter.cc",
+    "owl_request_filter.h",
+  ]
+
+  deps = [
+    "//base",
+    "//url",
+  ]
+}
