@@ -1,0 +1,64 @@
+# Owl Browser - Default GN Build Arguments
+# These args configure the Chromium build for Owl's memory-optimized profile.
+#
+# Usage:
+#   gn gen out/Owl --args='import("//owl_build/args.gn")'
+# Or copy these into your gn args directly.
+
+# === Build Mode ===
+is_debug = false
+is_official_build = false
+is_component_build = false
+symbol_level = 1
+
+# === Disable Unnecessary Features (Reduce Memory Footprint) ===
+enable_nacl = false                    # NaCl is deprecated
+enable_reading_list = false            # Remove Reading List bloat
+enable_vr = false                      # No VR support needed
+enable_cardboard = false               # No Cardboard VR
+enable_arcore = false                  # No ARCore
+enable_openxr = false                  # No OpenXR
+enable_printing = true                 # Keep printing
+enable_pdf = true                      # Keep PDF viewer
+enable_extensions = true               # CRITICAL: Keep Chrome Web Store extensions
+
+# Keep tab audio muting - used by Owl memory policy to detect audio tabs
+enable_tab_audio_muting = true
+
+# === Owl Feature Flags ===
+# These are defined in owl_features.gni and control Owl-specific code paths
+
+# Memory optimization master switch
+owl_memory_optimization = true
+
+# Oilpan GC aggressive collection for background tabs
+owl_aggressive_gc = true
+
+# IsoHeap type isolation for security-critical DOM types
+owl_isoheap_enabled = true
+
+# Arena allocator for layout data (atomic deallocation on page close)
+owl_arena_allocator = true
+
+# Built-in ad/tracker blocker with FlatBuffers filter lists
+owl_adblocker = true
+
+# Custom minimal UI
+owl_custom_ui = true
+
+# 3-tier memory pressure response system (Warning/Critical/Emergency)
+owl_memory_pressure_tiers = true
+
+# LRU tab unloading with smart exceptions
+owl_tab_lru_unloading = true
+
+# Memory reporter framework (owl://memory, owl://tabs pages)
+owl_memory_reporter = true
+
+# === Compilation Optimizations ===
+use_thin_lto = true                    # Link-time optimization
+chrome_pgo_phase = 0                   # No PGO (simplifies build)
+
+# === Branding ===
+# Override Chrome branding with Owl
+# is_chrome_branded = false            # Use Chromium branding as base

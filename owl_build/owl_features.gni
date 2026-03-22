@@ -1,0 +1,93 @@
+# Owl Browser - GN Feature Flag Definitions
+# Defines all Owl-specific build flags with their default values.
+# Import this file from BUILD.gn files that need Owl feature guards.
+#
+# Usage in BUILD.gn:
+#   import("//owl_build/owl_features.gni")
+#   if (owl_memory_optimization) { ... }
+#
+# Usage in C++ (via build flags):
+#   #if BUILDFLAG(OWL_AGGRESSIVE_GC)
+
+import("//build/buildflag_header.gni")
+
+# === Declare Owl build flags ===
+
+declare_args() {
+  # Master switch for all Owl memory optimizations.
+  # When false, Owl behaves like vanilla Chromium.
+  owl_memory_optimization = true
+
+  # Oilpan GC: Aggressive collection policy for background tabs.
+  # - Background tabs: GC every 5s (vs ~30s default)
+  # - Foreground tabs: Concurrent marking (Riptide pattern)
+  # - Emergency mode: Continuous GC + cache discard
+  # - Zombie compartment cleanup on tab close/navigate
+  # Source: Firefox MemShrink + WebKit Riptide
+  owl_aggressive_gc = true
+
+  # IsoHeap: Type-isolated memory spaces for security-critical DOM types.
+  # Node, Document, EventTarget, Element get dedicated heap spaces.
+  # Improves cache locality (~2%) and prevents type confusion attacks.
+  # Source: WebKit bmalloc/libpas
+  owl_isoheap_enabled = true
+
+  # Arena allocator for per-document layout data.
+  # Layout frames, computed styles, paint records allocated from contiguous arena.
+  # Entire arena freed atomically on page close (zero individual deallocation).
+  # Freed memory is poisoned to detect use-after-free.
+  # Source: Firefox nsPresShell arena allocator
+  owl_arena_allocator = true
+
+  # Built-in ad/tracker blocker at network level.
+  # Uses FlatBuffers for compiled filter lists (75% less memory vs text parsing).
+  # Filter lists loaded via mmap for zero deserialization overhead.
+  # Source: Brave adblock engine
+  owl_adblocker = true
+
+  # Custom minimal UI replacing Chrome's default UI.
+  # - Simplified tab strip with per-tab memory indicator
+  # - Clean address bar with security indicator
+  # - Memory indicator badge in toolbar
+  # - Simplified menu (no sync, no complex profiles)
+  owl_custom_ui = true
+
+  # 3-tier memory pressure response system.
+  # Warning (80% RAM): Incremental GC + purge optional caches
+  # Critical (90% RAM): Full GC + freeze background tabs
+  # Emergency (95% RAM): Discard LRU tabs + free discardable memory
+  # Source: Safari/iOS Jetsam model
+  owl_memory_pressure_tiers = true
+
+  # LRU tab unloading with smart exceptions.
+  # Tabs ranked by last use time. Exceptions: audio, pinned, WebRTC, unsaved forms.
+  # For >11 tabs: estimates per-process memory, targets heaviest tabs.
+  # Source: Firefox 93 Tab Unloader
+  owl_tab_lru_unloading = true
+
+  # Memory reporter framework with owl:// internal pages.
+  # Each subsystem reports memory usage hierarchically.
+  # owl://memory shows full breakdown, owl://tabs shows LRU priority.
+  # Source: Firefox about:memory
+  owl_memory_reporter = true
+}
+
+# === Generate C++ buildflag header ===
+# This creates a header that can be included in C++ code:
+#   #include "owl_build/owl_buildflags.h"
+#   #if BUILDFLAG(OWL_AGGRESSIVE_GC)
+
+buildflag_header("owl_buildflags") {
+  header = "owl_buildflags.h"
+  flags = [
+    "OWL_MEMORY_OPTIMIZATION=$owl_memory_optimization",
+    "OWL_AGGRESSIVE_GC=$owl_aggressive_gc",
+    "OWL_ISOHEAP_ENABLED=$owl_isoheap_enabled",
+    "OWL_ARENA_ALLOCATOR=$owl_arena_allocator",
+    "OWL_ADBLOCKER=$owl_adblocker",
+    "OWL_CUSTOM_UI=$owl_custom_ui",
+    "OWL_MEMORY_PRESSURE_TIERS=$owl_memory_pressure_tiers",
+    "OWL_TAB_LRU_UNLOADING=$owl_tab_lru_unloading",
+    "OWL_MEMORY_REPORTER=$owl_memory_reporter",
+  ]
+}

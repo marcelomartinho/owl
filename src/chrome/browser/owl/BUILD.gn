@@ -1,0 +1,45 @@
+# Copyright 2026 Owl Browser Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//owl_build/owl_features.gni")
+
+source_set("owl") {
+  sources = [
+    "owl_feature_flags.h",
+  ]
+
+  if (owl_memory_pressure_tiers) {
+    sources += [
+      "owl_memory_pressure.cc",
+      "owl_memory_pressure.h",
+    ]
+  }
+
+  if (owl_tab_lru_unloading) {
+    sources += [
+      "owl_tab_discard_policy.cc",
+      "owl_tab_discard_policy.h",
+    ]
+  }
+
+  if (owl_memory_reporter) {
+    sources += [
+      "owl_memory_monitor.cc",
+      "owl_memory_monitor.h",
+      "pages/owl_memory_page.cc",
+      "pages/owl_memory_page.h",
+      "pages/owl_tabs_page.cc",
+      "pages/owl_tabs_page.h",
+    ]
+  }
+
+  deps = [
+    "//base",
+    "//url",
+  ]
+
+  if (owl_adblocker) {
+    deps += [ "//chrome/browser/owl/adblocker" ]
+  }
+}

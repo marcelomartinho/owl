@@ -1,0 +1,26 @@
+# Copyright 2026 Owl Browser Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//owl_build/owl_features.gni")
+
+source_set("owl_ui") {
+  sources = [
+    "owl_browser_view.cc",
+    "owl_browser_view.h",
+    "owl_memory_indicator.cc",
+    "owl_memory_indicator.h",
+    "owl_menu.cc",
+    "owl_menu.h",
+    "owl_tab_strip.cc",
+    "owl_tab_strip.h",
+    "owl_toolbar.cc",
+    "owl_toolbar.h",
+  ]
+
+  deps = [
+    "//base",
+    "//chrome/browser/owl",
+    "//ui/views",
+  ]
+}
