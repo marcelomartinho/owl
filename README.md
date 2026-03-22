@@ -1,2 +1,2 @@
 # owl
-New light browser based on chromium
+New lightweight browser based on chromium
