@@ -4,6 +4,9 @@
 
 #include "third_party/blink/renderer/platform/heap/owl_gc_policy.h"
 
+#include "build/buildflag.h"
+#include "owl_build/owl_buildflags.h"
+
 #if BUILDFLAG(OWL_AGGRESSIVE_GC)
 
 #include "base/logging.h"

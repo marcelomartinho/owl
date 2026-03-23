@@ -7,9 +7,10 @@
 #include "base/files/file_util.h"
 #include "base/logging.h"
 #include "base/trace_event/trace_event.h"
+#include "build/build_config.h"
 #include "chrome/browser/owl/adblocker/owl_request_filter.h"
 
-#if defined(OS_POSIX)
+#if BUILDFLAG(IS_POSIX)
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -157,7 +158,7 @@ bool OwlFilterListManager::LoadFlatBuffer(const base::FilePath& binary_path,
                                           OwlRequestFilter* filter) {
   TRACE_EVENT0("browser", "OwlFilterListManager::LoadFlatBuffer");
 
-#if defined(OS_POSIX)
+#if BUILDFLAG(IS_POSIX)
   // Memory-map the FlatBuffer file for zero-copy access.
   // This is the key performance optimization: the OS handles
   // paging the data in/out as needed, and multiple processes

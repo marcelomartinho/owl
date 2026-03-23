@@ -61,7 +61,7 @@ FilterResult OwlRequestFilter::ShouldBlock(
 
   // Check block filters.
   const std::string url_string = url.spec();
-  const std::string domain = url.host();
+  const std::string domain(url.host());
 
   if (MatchesFilter(url_string, domain, resource_type)) {
     result.should_block = true;

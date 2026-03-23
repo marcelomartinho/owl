@@ -21,6 +21,7 @@ source_set("owl_ui") {
   deps = [
     "//base",
     "//chrome/browser/owl",
+    "//owl_build:owl_buildflags",
     "//ui/views",
   ]
 }

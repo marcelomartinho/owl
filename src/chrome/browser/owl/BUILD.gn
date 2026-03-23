@@ -6,6 +6,7 @@ import("//owl_build/owl_features.gni")
 
 source_set("owl") {
   sources = [
+    "owl_feature_flags.cc",
     "owl_feature_flags.h",
   ]
 
@@ -36,6 +37,7 @@ source_set("owl") {
 
   deps = [
     "//base",
+    "//owl_build:owl_buildflags",
     "//url",
   ]
 

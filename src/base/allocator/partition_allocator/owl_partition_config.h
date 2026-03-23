@@ -24,6 +24,10 @@
 #include <cstddef>
 #include <cstdint>
 
+#include "build/build_config.h"
+#include "build/buildflag.h"
+#include "owl_build/owl_buildflags.h"
+
 #if BUILDFLAG(OWL_MEMORY_OPTIMIZATION)
 
 namespace partition_alloc::owl {
@@ -103,9 +107,9 @@ constexpr size_t kOwlAllocationAuditMinSize = 0;
 // Firefox found that reducing arena count on macOS from the default
 // to 4 cut malloc latency by 44% and reduced fragmentation.
 // Owl uses a conservative value tuned per platform.
-#if defined(OS_MAC)
+#if BUILDFLAG(IS_MAC)
 constexpr size_t kOwlArenaCount = 4;
-#elif defined(OS_LINUX)
+#elif BUILDFLAG(IS_LINUX)
 constexpr size_t kOwlArenaCount = 8;
 #else
 constexpr size_t kOwlArenaCount = 8;

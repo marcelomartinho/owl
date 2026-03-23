@@ -4,6 +4,10 @@
 
 #include "third_party/blink/renderer/platform/heap/owl_arena_allocator.h"
 
+#include "build/build_config.h"
+#include "build/buildflag.h"
+#include "owl_build/owl_buildflags.h"
+
 #if BUILDFLAG(OWL_ARENA_ALLOCATOR)
 
 #include <algorithm>
@@ -14,7 +18,7 @@
 #include "base/memory/page_size.h"
 #include "base/trace_event/trace_event.h"
 
-#if defined(OS_POSIX)
+#if BUILDFLAG(IS_POSIX)
 #include <sys/mman.h>  // madvise
 #endif
 
@@ -27,7 +31,7 @@ OwlArenaAllocator::Chunk::Chunk(size_t cap)
   // Use mmap for large allocations to enable madvise later.
   // For smaller chunks, use aligned_alloc.
   if (cap >= base::GetPageSize()) {
-#if defined(OS_POSIX)
+#if BUILDFLAG(IS_POSIX)
     data = static_cast<uint8_t*>(
         mmap(nullptr, cap, PROT_READ | PROT_WRITE,
              MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
@@ -45,7 +49,7 @@ OwlArenaAllocator::Chunk::Chunk(size_t cap)
 OwlArenaAllocator::Chunk::~Chunk() {
   if (data) {
     if (capacity >= base::GetPageSize()) {
-#if defined(OS_POSIX)
+#if BUILDFLAG(IS_POSIX)
       munmap(data, capacity);
 #else
       free(data);
@@ -70,7 +74,7 @@ OwlArenaAllocator::Chunk& OwlArenaAllocator::Chunk::operator=(
     // Free existing data.
     if (data) {
       if (capacity >= base::GetPageSize()) {
-#if defined(OS_POSIX)
+#if BUILDFLAG(IS_POSIX)
         munmap(data, capacity);
 #else
         free(data);
@@ -106,7 +110,7 @@ void OwlArenaAllocator::Chunk::PoisonAndReset(uint8_t poison_byte) {
 
     // On POSIX, also tell the OS it can reclaim the physical pages.
     // This immediately reduces RSS (Firefox madvise technique).
-#if defined(OS_POSIX)
+#if BUILDFLAG(IS_POSIX)
     if (capacity >= base::GetPageSize()) {
       madvise(data, capacity, MADV_DONTNEED);
     }

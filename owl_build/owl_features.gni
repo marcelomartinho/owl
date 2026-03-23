@@ -9,8 +9,6 @@
 # Usage in C++ (via build flags):
 #   #if BUILDFLAG(OWL_AGGRESSIVE_GC)
 
-import("//build/buildflag_header.gni")
-
 # === Declare Owl build flags ===
 
 declare_args() {
@@ -72,22 +70,6 @@ declare_args() {
   owl_memory_reporter = true
 }
 
-# === Generate C++ buildflag header ===
-# This creates a header that can be included in C++ code:
-#   #include "owl_build/owl_buildflags.h"
-#   #if BUILDFLAG(OWL_AGGRESSIVE_GC)
-
-buildflag_header("owl_buildflags") {
-  header = "owl_buildflags.h"
-  flags = [
-    "OWL_MEMORY_OPTIMIZATION=$owl_memory_optimization",
-    "OWL_AGGRESSIVE_GC=$owl_aggressive_gc",
-    "OWL_ISOHEAP_ENABLED=$owl_isoheap_enabled",
-    "OWL_ARENA_ALLOCATOR=$owl_arena_allocator",
-    "OWL_ADBLOCKER=$owl_adblocker",
-    "OWL_CUSTOM_UI=$owl_custom_ui",
-    "OWL_MEMORY_PRESSURE_TIERS=$owl_memory_pressure_tiers",
-    "OWL_TAB_LRU_UNLOADING=$owl_tab_lru_unloading",
-    "OWL_MEMORY_REPORTER=$owl_memory_reporter",
-  ]
-}
+# NOTE: The buildflag_header("owl_buildflags") target is in //owl_build/BUILD.gn
+# Import this .gni to get the declare_args() values, then depend on
+# //owl_build:owl_buildflags to get the generated header.

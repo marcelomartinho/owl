@@ -1,0 +1,22 @@
+services:
+  owl-builder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: owl-chromium-builder
+    volumes:
+      - owl-chromium-build:/build
+      - ..:/owl:ro
+    deploy:
+      resources:
+        limits:
+          memory: 16G
+    stdin_open: true
+    tty: true
+    # Default: interactive shell. Override with:
+    #   docker compose run owl-builder /owl/docker/build-owl.sh
+    command: /bin/bash
+
+volumes:
+  owl-chromium-build:
+    name: owl-chromium-build
