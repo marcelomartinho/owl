@@ -94,7 +94,7 @@ class OwlRequestFilter {
   bool is_initialized_ = false;
   const uint8_t* filter_data_ = nullptr;
   size_t filter_data_size_ = 0;
-  Stats stats_;
+  mutable Stats stats_;
 };
 
 }  // namespace owl::adblocker

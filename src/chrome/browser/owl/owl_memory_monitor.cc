@@ -11,6 +11,7 @@
 #include "base/process/process_metrics.h"
 #include "base/system/sys_info.h"
 #include "base/trace_event/trace_event.h"
+#include "build/build_config.h"
 
 namespace owl {
 
@@ -143,7 +144,7 @@ void OwlMemoryMonitor::CollectProcessMetrics() {
   // For now, collect the browser process's own metrics.
   auto metrics = base::ProcessMetrics::CreateCurrentProcessMetrics();
 
-#if defined(OS_LINUX) || defined(OS_CHROMEOS)
+#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
   total_memory_bytes_ = metrics->GetResidentSetSize();
 #else
   size_t private_bytes = 0;

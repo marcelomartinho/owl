@@ -12,7 +12,7 @@ namespace owl::pages {
 std::string OwlMemoryPage::GenerateHtml() {
   std::ostringstream html;
 
-  html << R"(<!DOCTYPE html>
+  html << R"OWL(<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
@@ -199,7 +199,7 @@ std::string OwlMemoryPage::GenerateHtml() {
     refresh();
   </script>
 </body>
-</html>)";
+</html>)OWL";
 
   return html.str();
 }

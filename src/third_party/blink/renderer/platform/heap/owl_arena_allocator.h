@@ -10,6 +10,8 @@
 #include <vector>
 
 #include "base/check.h"
+#include "build/buildflag.h"
+#include "owl_build/owl_buildflags.h"
 #include "third_party/blink/renderer/platform/platform_export.h"
 
 #if BUILDFLAG(OWL_ARENA_ALLOCATOR)
