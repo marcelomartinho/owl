@@ -10,7 +10,7 @@ Owl is a Chromium fork with deep memory management optimizations in the Blink re
 - **Python**: 3.9+
 - **OS**: Linux (Ubuntu 20.04+), macOS, or Windows 10+
 
-## Quick Start
+## Quick Start (Linux)
 
 ```bash
 # 1. Clone the Owl repository
@@ -30,17 +30,53 @@ cd owl
 ./chromium/src/out/Owl/chrome
 ```
 
+## Quick Start (Windows)
+
+**Prerequisites:**
+- Windows 10/11 (64-bit)
+- [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/) with "Desktop development with C++" workload
+- Windows 10/11 SDK (10.0.22621.0+)
+- Git and Python 3.9+ in PATH
+- 100GB+ free disk, 16GB+ RAM (32GB recommended)
+
+```powershell
+# 1. Clone the Owl repository
+git clone <owl-repo-url> owl
+cd owl
+
+# 2. Fetch Chromium source (~30GB download)
+.\scripts\fetch_chromium_win.ps1
+
+# 3. Apply Owl patches and copy source files
+.\scripts\apply_patches_win.ps1
+
+# 4. Build (30min - 3h+ depending on hardware)
+.\scripts\build_win.ps1
+
+# 5. Run
+.\chromium\src\out\Owl\chrome.exe
+
+# 6. (Optional) Generate installer
+#    Requires NSIS 3.x: https://nsis.sourceforge.io/
+makensis /DBUILD_DIR=chromium\src\out\Owl installer\owl_installer.nsi
+# Output: installer\OwlSetup.exe
+```
+
 ## Build Modes
 
+### Linux
 ```bash
-# Debug build (faster compile, larger binary, better debugging)
-./scripts/build.sh --debug
+./scripts/build.sh --debug      # Faster compile, larger binary
+./scripts/build.sh --release    # Default, optimized
+./scripts/build.sh --official   # Slowest compile, most optimized
+```
 
-# Release build (default, optimized)
-./scripts/build.sh --release
-
-# Official build (slowest compile, most optimized binary)
-./scripts/build.sh --official
+### Windows
+```powershell
+.\scripts\build_win.ps1 -BuildType debug
+.\scripts\build_win.ps1 -BuildType release    # Default
+.\scripts\build_win.ps1 -BuildType official
+.\scripts\build_win.ps1 -Jobs 8               # Limit parallel jobs
 ```
 
 ## Custom Build Directory
@@ -107,3 +143,19 @@ The Chromium version may have changed. Update patches:
 ```bash
 cd chromium/src && ./build/install-build-deps.sh
 ```
+
+### Windows: Visual Studio not found
+Install Visual Studio 2022 with the "Desktop development with C++" workload and Windows SDK.
+
+### Windows: generating the installer
+Install [NSIS 3.x](https://nsis.sourceforge.io/), then:
+```powershell
+makensis /DBUILD_DIR=chromium\src\out\Owl installer\owl_installer.nsi
+```
+
+### Windows: generating the icon
+```powershell
+pip install Pillow
+python branding\generate_ico.py
+```
+Replace the generated placeholder with proper artwork before release.

@@ -1,0 +1,47 @@
+# Owl Browser - Windows GN Build Arguments
+# These args configure the Chromium build for Owl on Windows.
+#
+# Usage:
+#   gn gen out/Owl --args='import("//owl_build/args_win.gn")'
+
+# === Build Mode ===
+is_debug = false
+is_official_build = false
+is_component_build = false
+symbol_level = 1
+
+# === Windows Target ===
+target_os = "win"
+target_cpu = "x64"
+is_clang = true
+
+# === Disable Unnecessary Features ===
+enable_nacl = false
+enable_reading_list = false
+enable_vr = false
+enable_cardboard = false
+enable_arcore = false
+enable_openxr = false
+enable_printing = true
+enable_pdf = true
+enable_extensions = true
+enable_tab_audio_muting = true
+
+# === Owl Feature Flags ===
+owl_memory_optimization = true
+owl_aggressive_gc = true
+owl_isoheap_enabled = true
+owl_arena_allocator = true
+owl_adblocker = true
+owl_custom_ui = true
+owl_memory_pressure_tiers = true
+owl_tab_lru_unloading = true
+owl_memory_reporter = true
+
+# === Compilation Optimizations ===
+use_thin_lto = true
+chrome_pgo_phase = 0
+
+# === Windows-Specific ===
+# Generate PDB for debugging crashes
+generate_linker_map = true
